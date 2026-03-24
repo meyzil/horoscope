@@ -7,54 +7,134 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --night: #0a0a1a; --deep: #10102a; --card: #16163a;
+            --night: #0a0a1a; --deep: #10102a; --card: rgba(22, 22, 58, 0.9);
             --gold: #d4a843; --gold-light: #f0cc7a; --silver: #c8d0e0; --text: #eef0f8;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Noto Serif Hebrew', serif; background-color: var(--night);
-            background-image: radial-gradient(circle at 50% 50%, var(--deep), var(--night));
-            color: var(--text); display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; margin: 0; direction: rtl;
+            font-family: 'Noto Serif Hebrew', serif;
+            background: var(--night);
+            background: radial-gradient(circle at center, var(--deep) 0%, var(--night) 100%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            direction: rtl;
         }
+
+        /* רקע כוכבים חי */
+        .star-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
         .container {
-            background-color: var(--card); padding: 2.5rem; border-radius: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px rgba(212, 168, 67, 0.15);
-            text-align: center; border: 1px solid rgba(212, 168, 67, 0.3);
-            width: 90%; max-width: 500px;
+            position: relative;
+            z-index: 10;
+            background-color: var(--card);
+            padding: 2.5rem;
+            border-radius: 30px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212, 168, 67, 0.2);
+            text-align: center;
+            border: 1px solid var(--gold);
+            width: 90%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
         }
-        h1 { color: var(--gold); font-size: 2rem; margin-bottom: 1.5rem; }
+
+        h1 { color: var(--gold); font-size: 2.2rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(212, 168, 67, 0.5); }
+        .subtitle { color: var(--silver); font-size: 1rem; margin-bottom: 2rem; display: block; opacity: 0.8; }
+
         select {
-            background: #1a1a4a; color: var(--text); border: 2px solid var(--gold);
-            padding: 15px; font-size: 1.1rem; border-radius: 12px; width: 100%;
-            margin-bottom: 20px; font-family: inherit; outline: none;
+            background: rgba(26, 26, 74, 0.8);
+            color: var(--text);
+            border: 2px solid var(--gold);
+            padding: 15px;
+            font-size: 1.1rem;
+            border-radius: 15px;
+            width: 100%;
+            margin-bottom: 20px;
+            font-family: inherit;
+            outline: none;
+            cursor: pointer;
         }
+
         button {
             background: linear-gradient(135deg, var(--gold), #b58930);
-            color: var(--night); border: none; padding: 18px; font-size: 1.2rem;
-            border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%;
-            transition: 0.3s; font-family: inherit;
+            color: var(--night);
+            border: none;
+            padding: 18px;
+            font-size: 1.3rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: 0.4s;
+            font-family: inherit;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 168, 67, 0.4); }
+
+        button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(212, 168, 67, 0.5);
+        }
+
         .result-box {
-            margin-top: 25px; text-align: right; display: none;
-            background: rgba(255, 255, 255, 0.03); padding: 20px; border-radius: 15px;
-            border-right: 4px solid var(--gold); animation: fadeIn 0.5s;
+            margin-top: 30px;
+            text-align: right;
+            display: none;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            border-right: 5px solid var(--gold);
+            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        .analysis { color: var(--silver); font-size: 0.95rem; margin-bottom: 15px; font-style: italic; }
-        .prediction { color: var(--gold-light); font-size: 1.15rem; font-weight: bold; line-height: 1.5; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .analysis { color: var(--gold-light); font-size: 0.9rem; margin-bottom: 12px; font-weight: bold; border-bottom: 1px solid rgba(212, 168, 67, 0.2); padding-bottom: 8px; }
+        .prediction { color: var(--text); font-size: 1.15rem; line-height: 1.6; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
+<div class="star-container" id="starField"></div>
+
 <div class="container">
-    <h1>מפת כוכבים אישית ✨</h1>
+    <h1>הורוסקופ אסטרולוגי ✨</h1>
+    <span class="subtitle">של אבא ואמא</span>
+    
     <select id="user-select">
         <option value="" disabled selected>מי בודק את הכוכבים?</option>
-        <option value="dad">אבא (דלי ♒ - אוויר)</option>
-        <option value="mom">אמא (עקרב ♏ - מים)</option>
+        <option value="dad">אבא (דלי ♒)</option>
+        <option value="mom">אמא (עקרב ♏)</option>
+        <option value="both">אבא ואמא (ניתוח זוגי ❤️)</option>
     </select>
-    <button onclick="generateHoroscope()">ניתוח אסטרולוגי</button>
+
+    <button onclick="generateHoroscope()">צפו בניתוח המפות</button>
+
     <div id="result-box" class="result-box">
         <div id="analysis" class="analysis"></div>
         <div id="prediction" class="prediction"></div>
@@ -62,38 +142,52 @@
 </div>
 
 <script>
-function generateHoroscope() {
-    const user = document.getElementById('user-select').value;
-    const box = document.getElementById('result-box');
-    const analysisDiv = document.getElementById('analysis');
-    const predDiv = document.getElementById('prediction');
-
-    const phrases = [
-        "בשמחה גדולה", "בנחת אמיתית", "מיט א רוהיגקייט", "אן לחץ בכלל", "ברוגע מוחלט",
-        "בלי עצבים, הכל עובר", "שלווה קוסמית", "פשוט לנשום עמוק", "הכל מלמעלה, בנחת",
-        "יום של שקט תעשייתי", "בלי דאגות מיותרות", "נחת רוח לכולם", "הכל זורם על מי מנוחות",
-        "יום של חיוך פנימי", "בלי רעשי רקע", "רוגע נפשי עמוק", "מיט א גאנצע שמחה",
-        "הכל יסתדר, אן לחץ", "זמן ליהנות מהרגע", "יום של שלום בית ושלווה",
-        "בלי למהר לשום מקום", "מיט א רוהיגקייט ושלווה", "שמחה בלב ובנשמה",
-        "בנחת ובסבלנות", "יום ללא דאגות", "רוגע שמגיע עד הכוכבים",
-        "אן לחץ, הכל רגוע", "מיט א שמחה'דיגע פנים", "פשוט להיות בנחת", "הכל קטן עליכם"
-    ];
-
-    const dadAnalysis = "ניתוח דלי: מזל אוויר, נשלט ע"י אורנוס. חשיבה עצמאית, מקוריות וצורך בחופש.";
-    const momAnalysis = "ניתוח עקרב: מזל מים, נשלט ע"י פלוטו. אינטואיציה חזקה, עומק רגשי ועוצמה פנימית.";
-
-    let randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-    
-    if (user === 'dad') {
-        analysisDiv.innerText = dadAnalysis;
-        predDiv.innerText = "אבא, הכוכבים מראים שסידור הכוכבים היום דורש ממך לעשות הכל " + randomPhrase + ".";
-    } else if (user === 'mom') {
-        analysisDiv.innerText = momAnalysis;
-        predDiv.innerText = "אמא, האנרגיה של פלוטו היום מכוונת אותך לפעול " + randomPhrase + ".";
+    // יצירת כוכבים
+    const starField = document.getElementById('starField');
+    for (let i = 0; i < 150; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        const size = Math.random() * 3 + 'px';
+        star.style.width = size;
+        star.style.height = size;
+        star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+        starField.appendChild(star);
     }
 
-    box.style.display = 'block';
-}
+    function generateHoroscope() {
+        const user = document.getElementById('user-select').value;
+        const box = document.getElementById('result-box');
+        const analysisDiv = document.getElementById('analysis');
+        const predDiv = document.getElementById('prediction');
+
+        const phrases = [
+            "בשמחה גדולה", "בנחת אמיתית", "מיט א רוהיגקייט", "אן לחץ בכלל", "ברוגע מוחלט",
+            "בלי עצבים", "שלווה קוסמית", "נשימות עמוקות", "הכל מלמעלה בנחת",
+            "שקט תעשייתי", "בלי דאגות מיותרות", "נחת רוח", "על מי מנוחות",
+            "חיוך פנימי", "בלי רעשי רקע", "רוגע נפשי עמוק", "מיט א גאנצע שמחה",
+            "הכל יסתדר - אן לחץ", "ליהנות מהרגע", "שלום בית ושלווה",
+            "בלי למהר לשום מקום", "שמחה בלב ובנשמה", "בנחת ובסבלנות",
+            "אן לחץ, הכל רגוע", "מיט א שמחה'דיגע פנים", "פשוט להיות בנחת",
+            "בלי מחשבות מיותרות", "רוגע פנימי", "שלוות עולמים", "בלי טיפה של מתח"
+        ];
+
+        let randomP = () => phrases[Math.floor(Math.random() * phrases.length)];
+        
+        if (user === 'dad') {
+            analysisDiv.innerText = "♒ מזל דלי (אוויר): נשלט ע\"י אורנוס. חשיבה עצמאית ומקוריות.";
+            predDiv.innerText = "אבא, הכוכבים מראים שסידור המזלות היום דורש ממך לעשות הכל " + randomP() + ".";
+        } else if (user === 'mom') {
+            analysisDiv.innerText = "♏ מזל עקרב (מים): נשלט ע\"י פלוטו. עוצמה רגשית ואינטואיציה.";
+            predDiv.innerText = "אמא, האנרגיה הקוסמית מכוונת אותך לפעול היום אך ורק " + randomP() + ".";
+        } else if (user === 'both') {
+            analysisDiv.innerText = "♒ דלי + ♏ עקרב: שילוב של אוויר ומים. חיבור מרתק בין שכל לרגש.";
+            predDiv.innerText = "אבא ואמא, המפה המשותפת שלכם מראה שזה יום מושלם לזמן איכות. הכוכבים ממליצים לכם לנהל את היום יחד " + randomP() + " ובעיקר " + randomP() + ".";
+        }
+
+        if (user) box.style.display = 'block';
+    }
 </script>
 </body>
 </html>
