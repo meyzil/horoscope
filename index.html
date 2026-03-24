@@ -1,311 +1,4 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>הורוסקופ של אבא ואמא ✨</title>
-<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Noto+Serif+Hebrew:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --night: #0a0a1a;
-    --deep: #10102a;
-    --card: #16163a;
-    --gold: #d4a843;
-    --gold-light: #f0cc7a;
-    --silver: #c8d0e0;
-    --glow-aqua: #4fc3d0;
-    --glow-purple: #8b5cf6;
-    --glow-rose: #e879a0;
-    --text: #eef0f8;
-    --text-muted: #8890aa;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Noto Serif Hebrew', serif;
-    background: var(--night);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* Star field */
-  .stars {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .star {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle var(--dur) ease-in-out infinite alternate;
-  }
-  @keyframes twinkle {
-    from { opacity: 0.1; transform: scale(0.8); }
-    to   { opacity: 0.9; transform: scale(1.2); }
-  }
-
-  .container {
-    position: relative;
-    z-index: 1;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 30px 20px 60px;
-  }
-
-  /* Header */
-  .header {
-    text-align: center;
-    margin-bottom: 40px;
-    animation: fadeDown 0.8s ease both;
-  }
-  .header .moon-icon {
-    font-size: 52px;
-    display: block;
-    margin-bottom: 8px;
-    filter: drop-shadow(0 0 18px var(--gold));
-    animation: float 4s ease-in-out infinite;
-  }
-  @keyframes float {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-8px); }
-  }
-  .header h1 {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: clamp(28px, 6vw, 42px);
-    font-weight: 900;
-    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--glow-rose));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.2;
-    margin-bottom: 6px;
-  }
-  .header p {
-    color: var(--text-muted);
-    font-size: 14px;
-    letter-spacing: 0.05em;
-  }
-
-  /* Date display */
-  .date-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(212,168,67,0.12);
-    border: 1px solid rgba(212,168,67,0.3);
-    border-radius: 40px;
-    padding: 6px 18px;
-    font-size: 13px;
-    color: var(--gold-light);
-    margin-bottom: 32px;
-    text-align: center;
-  }
-
-  /* Tabs */
-  .tabs {
-    display: flex;
-    gap: 0;
-    background: var(--deep);
-    border-radius: 16px;
-    padding: 4px;
-    margin-bottom: 32px;
-    border: 1px solid rgba(255,255,255,0.07);
-  }
-  .tab-btn {
-    flex: 1;
-    padding: 14px;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 17px;
-    font-weight: 700;
-    border-radius: 13px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  .tab-btn.active {
-    background: linear-gradient(135deg, #1e1e50, #2a1a4a);
-    color: var(--gold-light);
-    box-shadow: 0 4px 20px rgba(139,92,246,0.3);
-  }
-
-  /* Person cards */
-  .person-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-  @media (max-width: 480px) {
-    .person-grid { grid-template-columns: 1fr; }
-  }
-
-  .person-card {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 22px 18px;
-    border: 1px solid rgba(255,255,255,0.07);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-  .person-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-    border-radius: 20px;
-  }
-  .person-card.dad::before  { background: radial-gradient(circle at 30% 30%, rgba(79,195,208,0.15), transparent 70%); }
-  .person-card.mom::before  { background: radial-gradient(circle at 70% 30%, rgba(232,121,160,0.15), transparent 70%); }
-  .person-card:hover::before, .person-card.selected::before { opacity: 1; }
-  .person-card.selected {
-    border-color: rgba(212,168,67,0.5);
-    box-shadow: 0 0 24px rgba(212,168,67,0.15);
-    transform: translateY(-2px);
-  }
-
-  .person-label {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-  .person-name {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 22px;
-    font-weight: 900;
-    margin-bottom: 8px;
-  }
-  .person-card.dad .person-name { color: var(--glow-aqua); }
-  .person-card.mom .person-name { color: var(--glow-rose); }
-  .person-sign {
-    font-size: 28px;
-    margin-bottom: 4px;
-  }
-  .person-sign-name {
-    font-size: 15px;
-    color: var(--gold-light);
-    font-weight: 600;
-  }
-  .selected-check {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 22px;
-    height: 22px;
-    background: var(--gold);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  .person-card.selected .selected-check { opacity: 1; }
-
-  /* Generate button */
-  .generate-btn {
-    width: 100%;
-    padding: 20px;
-    background: linear-gradient(135deg, #2a1a6a, #1a1a4a);
-    border: 1px solid rgba(212,168,67,0.4);
-    border-radius: 16px;
-    color: var(--gold-light);
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 20px;
-    font-weight: 900;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 24px rgba(139,92,246,0.2);
-  }
-  .generate-btn:hover {
-    background: linear-gradient(135deg, #3a2a80, #2a2a60);
-    box-shadow: 0 6px 32px rgba(139,92,246,0.4);
-    transform: translateY(-2px);
-  }
-  .generate-btn:active { transform: translateY(0); }
-  .generate-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  /* Result card */
-  .result-card {
-    background: var(--card);
-    border-radius: 24px;
-    padding: 28px 24px;
-    border: 1px solid rgba(212,168,67,0.2);
-    margin-bottom: 20px;
-    animation: fadeUp 0.6s ease both;
-    display: none;
-  }
-  .result-card.show { display: block; }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .result-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .result-emoji { font-size: 36px; }
-  .result-title-wrap {}
-  .result-person {
-    font-size: 13px;
-    color: var(--text-muted);
-  }
-  .result-title {
-    font-family: 'Frank Ruhl Libre', serif;
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--gold-light);
-  }
-
-  .horoscope-text {
-    font-size: 18px;
-    line-height: 1.85;
-    color: var(--silver);
-    white-space: pre-line;
-  }
-
-  /* Sections inside horoscope */
-  .section-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(212,168,67,0.1);
-    border: 1px solid rgba(212,168,67,0.25);
-    border-radius: 20px;
-    padding: 3px 12px;
-    font-size: 13px;
-    color: var(--gold);
-    margin: 14px 0 6px;
-  }
-
-  /* Loading */
+ /* Loading */
   .loading {
     display: none;
     text-align: center;
@@ -636,5 +329,140 @@ async function copyText() {
   }
 }
 </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הורוסקופ של אבא ואמא ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Noto+Serif+Hebrew:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #0a0a1a;
+    --deep: #10102a;
+    --card: #16163a;
+    --gold: #d4a843;
+    --gold-light: #f0cc7a;
+    --silver: #c8d0e0;
+    --glow-aqua: #4fc3d0;
+    --glow-purple: #8b5cf6;
+    --glow-rose: #e879a0;
+    --text: #eef0f8;
+    --text-muted: #8890aa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Serif Hebrew', serif;
+    background: var(--night);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    width: 90%;
+    background: var(--card);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid var(--gold);
+    text-align: center;
+    box-shadow: 0 0 30px rgba(212, 168, 67, 0.2);
+  }
+
+  h1 { color: var(--gold); margin-bottom: 20px; }
+
+  select {
+    width: 100%;
+    padding: 12px;
+    background: var(--deep);
+    color: white;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-family: inherit;
+  }
+
+  button {
+    background: var(--gold);
+    color: var(--night);
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1.1rem;
+  }
+
+  #result {
+    margin-top: 30px;
+    padding: 20px;
+    border-top: 1px solid rgba(212, 168, 67, 0.3);
+    color: var(--gold-light);
+    line-height: 1.6;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>הורוסקופ של אבא ואמא ✨</h1>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">גלו מה הכוכבים אומרים לכם היום</p>
+    </div>
+
+    <select id="zodiac">
+        <option value="" disabled selected>בחרו מזל...</option>
+        <option value="טלה">טלה</option>
+        <option value="שור">שור</option>
+        <option value="תאומים">תאומים</option>
+        <option value="סרטן">סרטן</option>
+        <option value="אריה">אריה</option>
+        <option value="בתולה">בתולה</option>
+        <option value="מאזניים">מאזניים</option>
+        <option value="עקרב">עקרב</option>
+        <option value="קשת">קשת</option>
+        <option value="גדי">גדי</option>
+        <option value="דלי">דלי</option>
+        <option value="דגים">דגים</option>
+    </select>
+
+    <button onclick="getHoroscope()">קבלת תחזית</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+function getHoroscope() {
+    const predictions = [
+        "היום הוא יום של בשורות טובות וחיבור משפחתי עמוק.",
+        "הכוכבים מחייכים אליכם! זמן מעולה להשקיע ברוגע ובמנוחה.",
+        "מישהו חושב עליכם לטובה ברגעים אלו ממש.",
+        "האנרגיה שלכם היום מדבקת, הפיצו אותה הלאה!",
+        "זמן מצוין להתחיל משהו קטן שתמיד רציתם לעשות."
+    ];
+    
+    const sign = document.getElementById('zodiac').value;
+    const resultDiv = document.getElementById('result');
+    
+    if (sign) {
+        const random = predictions[Math.floor(Math.random() * predictions.length)];
+        resultDiv.innerHTML = "<strong>מזל " + sign + ":</strong><br>" + random;
+        resultDiv.style.display = 'block';
+    } else {
+        alert("נא לבחור מזל תחילה");
+    }
+}
+</script>
+
 </body>
 </html>
