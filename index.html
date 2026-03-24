@@ -23,7 +23,6 @@
             overflow: hidden; direction: rtl;
         }
 
-        /* רקע כוכבים מנצנץ */
         .star-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--duration) infinite; }
         @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
@@ -49,7 +48,7 @@
             background: linear-gradient(135deg, var(--gold), #b58930);
             color: var(--night); border: none; padding: 20px; font-size: 1.4rem;
             border-radius: 15px; cursor: pointer; font-weight: bold; width: 100%;
-            transition: 0.2s; font-family: inherit; text-transform: uppercase;
+            transition: 0.2s; font-family: inherit;
         }
 
         button:active { transform: scale(0.95); background: var(--gold-light); }
@@ -63,7 +62,7 @@
 
         .astro-term { color: var(--gold-light); font-weight: bold; font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 10px; display: block; }
         .main-text { font-size: 1.25rem; line-height: 1.6; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-        .motto-tag { margin-top: 15px; display: inline-block; padding: 5px 15px; background: var(--gold); color: var(--night); border-radius: 20px; font-weight: 800; font-size: 1rem; }
+        .motto-tag { margin-top: 15px; display: inline-block; padding: 8px 20px; background: var(--gold); color: var(--night); border-radius: 20px; font-weight: 800; font-size: 1.1rem; }
 
         @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
     </style>
@@ -91,7 +90,6 @@
 </div>
 
 <script>
-    // יצירת כוכבים רקע
     const starField = document.getElementById('starField');
     for (let i = 0; i < 150; i++) {
         const star = document.createElement('div');
@@ -104,30 +102,29 @@
     }
 
     const terms = [
-        "נסיגת מרקורי בבית ה-4", "זווית הרמונית בין ונוס למאדים", "מעבר של הירח למזל מים", 
-        "קונז'נקשן של אורנוס ופלוטו", "היבט חיובי מיופיטר", "שמש בבית הקריירה", 
-        "סטורן בנסיגה קוסמית", "טרנזיט של נפטון בבית הבית", "זווית של 120 מעלות מהשמש"
+        "זווית הרמונית בין ונוס למאדים", "מעבר חיובי של הירח", "היבט מוצלח מיופיטר", 
+        "שמש בבית השמחה", "טרנזיט מלכותי של אורנוס", "חיבור קוסמי של פלוטו", 
+        "זווית של 120 מעלות מהשמש", "אנרגיה חדשה בבית הקריירה", "התיישרות כוכבי השפע"
     ];
 
     const predictions = [
-        "מזכיר לכם שהיום הכל קטן עליכם.", "מביא איתו הזדמנות לשבת רגע ולנשום.", 
-        "מראה שצפויה לכם הפתעה טובה בקרוב.", "מרמז שהגיע הזמן להתפנק במשהו טעים.", 
-        "יוצר זרימה של אנרגיות חיוביות בבית.", "מסדר לכם יום שקט ונטול דאגות.", 
-        "מבטיח שהכל מסתדר על הצד הטוב ביותר.", "מכוון אתכם לזמן איכות משפחתי."
+        "מזכיר לכם שהיום אתם בשיא שלכם.", "מביא איתו הזדמנות לשבת רגע וליהנות מהקיים.", 
+        "מראה שצפויה לכם הפתעה משמחת מאוד.", "מרמז שהגיע הזמן להתפנק ולחגוג את החיים.", 
+        "יוצר זרימה של אור ואהבה בכל פינה בבית.", "מסדר לכם יום של נחת ושקט פנימי.", 
+        "מבטיח שהכל מתקדם בדיוק לפי התוכנית שלכם.", "מכוון אתכם לזמן איכות זוגי ומושלם."
     ];
 
     const mottos = [
         "מיט א רוהיגקייט", "בנחת אמיתית", "אן לחץ בכלל", "בשמחה רבה", 
-        "ברוגע מוחלט", "בלי עצבים", "שלווה קוסמית", "פשוט לנשום", 
-        "הכל מלמעלה", "בשקט ובשלווה", "בלי דאגות", "אן לחץ!", 
-        "רוגע נפשי", "מיט א גאנצע שמחה", "בלי למהר", "חיוך פנימי"
+        "ברוגע מוחלט", "שלווה קוסמית", "פשוט לנשום וליהנות", 
+        "הכל מלמעלה - בטוב", "בשקט ובשלווה", "בלי דאגות, רק חיוכים", "אן לחץ!", 
+        "רוגע נפשי עמוק", "מיט א גאנצע שמחה", "בנחת ובחיוך", "חיוך פנימי מאיר"
     ];
 
     function spinStars() {
         const user = document.getElementById('user-select').value;
         const box = document.getElementById('result-box');
         
-        // הגרלה רנדומלית בכל לחיצה
         const term = terms[Math.floor(Math.random() * terms.length)];
         const pred = predictions[Math.floor(Math.random() * predictions.length)];
         const motto = mottos[Math.floor(Math.random() * mottos.length)];
@@ -141,7 +138,6 @@
         document.getElementById('main-text').innerText = prefix + term + " " + pred;
         document.getElementById('motto-tag').innerText = "💡 " + motto;
 
-        // אפקט רענון - מכבה ומדליק את הקופסה
         box.style.display = 'none';
         setTimeout(() => { box.style.display = 'block'; }, 10);
     }
