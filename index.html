@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>הורוסקופ אסטרולוגי: אבא ואמא ✨</title>
+    <title>הורוסקופ אקשן: אבא ואמא ✨</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --night: #0a0a1a; --deep: #10102a; --card: rgba(22, 22, 58, 0.9);
+            --night: #050510; --deep: #0a0a20; --card: rgba(15, 15, 40, 0.9);
             --gold: #d4a843; --gold-light: #f0cc7a; --silver: #c8d0e0; --text: #eef0f8;
         }
 
@@ -19,103 +19,53 @@
             background: radial-gradient(circle at center, var(--deep) 0%, var(--night) 100%);
             color: var(--text);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            direction: rtl;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; direction: rtl;
         }
 
-        /* רקע כוכבים חי */
-        .star-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.5;
-            animation: twinkle var(--duration) infinite ease-in-out;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
+        /* רקע כוכבים מנצנץ */
+        .star-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: twinkle var(--duration) infinite; }
+        @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
 
         .container {
-            position: relative;
-            z-index: 10;
-            background-color: var(--card);
-            padding: 2.5rem;
-            border-radius: 30px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212, 168, 67, 0.2);
-            text-align: center;
-            border: 1px solid var(--gold);
-            width: 90%;
-            max-width: 500px;
-            backdrop-filter: blur(10px);
+            position: relative; z-index: 10; background: var(--card);
+            padding: 2.5rem; border-radius: 30px; border: 2px solid var(--gold);
+            box-shadow: 0 0 50px rgba(212, 168, 67, 0.3);
+            width: 95%; max-width: 500px; backdrop-filter: blur(15px); text-align: center;
         }
 
-        h1 { color: var(--gold); font-size: 2.2rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px rgba(212, 168, 67, 0.5); }
-        .subtitle { color: var(--silver); font-size: 1rem; margin-bottom: 2rem; display: block; opacity: 0.8; }
+        h1 { color: var(--gold); font-size: 2.2rem; margin-bottom: 1.5rem; text-shadow: 0 0 15px rgba(212,168,67,0.6); }
+
+        .controls { display: flex; flex-direction: column; gap: 15px; }
 
         select {
-            background: rgba(26, 26, 74, 0.8);
-            color: var(--text);
-            border: 2px solid var(--gold);
-            padding: 15px;
-            font-size: 1.1rem;
-            border-radius: 15px;
-            width: 100%;
-            margin-bottom: 20px;
-            font-family: inherit;
-            outline: none;
-            cursor: pointer;
+            background: rgba(20, 20, 50, 0.9); color: white; border: 2px solid var(--gold);
+            padding: 15px; font-size: 1.1rem; border-radius: 15px; width: 100%;
+            font-family: inherit; outline: none; cursor: pointer; transition: 0.3s;
         }
 
         button {
             background: linear-gradient(135deg, var(--gold), #b58930);
-            color: var(--night);
-            border: none;
-            padding: 18px;
-            font-size: 1.3rem;
-            border-radius: 15px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            transition: 0.4s;
-            font-family: inherit;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            color: var(--night); border: none; padding: 20px; font-size: 1.4rem;
+            border-radius: 15px; cursor: pointer; font-weight: bold; width: 100%;
+            transition: 0.2s; font-family: inherit; text-transform: uppercase;
         }
 
-        button:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(212, 168, 67, 0.5);
-        }
+        button:active { transform: scale(0.95); background: var(--gold-light); }
 
         .result-box {
-            margin-top: 30px;
-            text-align: right;
-            display: none;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 15px;
-            border-right: 5px solid var(--gold);
-            animation: slideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            margin-top: 25px; text-align: right; display: none;
+            background: rgba(255, 255, 255, 0.07); padding: 25px; border-radius: 20px;
+            border-right: 6px solid var(--gold); border-left: 6px solid var(--gold);
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .analysis { color: var(--gold-light); font-size: 0.9rem; margin-bottom: 12px; font-weight: bold; border-bottom: 1px solid rgba(212, 168, 67, 0.2); padding-bottom: 8px; }
-        .prediction { color: var(--text); font-size: 1.15rem; line-height: 1.6; }
+        .astro-term { color: var(--gold-light); font-weight: bold; font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 10px; display: block; }
+        .main-text { font-size: 1.25rem; line-height: 1.6; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .motto-tag { margin-top: 15px; display: inline-block; padding: 5px 15px; background: var(--gold); color: var(--night); border-radius: 20px; font-weight: 800; font-size: 1rem; }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -123,70 +73,77 @@
 <div class="star-container" id="starField"></div>
 
 <div class="container">
-    <h1>הורוסקופ אסטרולוגי ✨</h1>
-    <span class="subtitle">של אבא ואמא</span>
-    
-    <select id="user-select">
-        <option value="" disabled selected>מי בודק את הכוכבים?</option>
-        <option value="dad">אבא (דלי ♒)</option>
-        <option value="mom">אמא (עקרב ♏)</option>
-        <option value="both">אבא ואמא (ניתוח זוגי ❤️)</option>
-    </select>
-
-    <button onclick="generateHoroscope()">צפו בניתוח המפות</button>
+    <h1>אסטרולוגיה בנחת ✨</h1>
+    <div class="controls">
+        <select id="user-select">
+            <option value="dad">אבא (דלי ♒)</option>
+            <option value="mom">אמא (עקרב ♏)</option>
+            <option value="both">אבא ואמא (זיווג קוסמי ❤️)</option>
+        </select>
+        <button onclick="spinStars()">תנו לי תחזית עכשיו!</button>
+    </div>
 
     <div id="result-box" class="result-box">
-        <div id="analysis" class="analysis"></div>
-        <div id="prediction" class="prediction"></div>
+        <span id="astro-term" class="astro-term"></span>
+        <div id="main-text" class="main-text"></div>
+        <div id="motto-tag" class="motto-tag"></div>
     </div>
 </div>
 
 <script>
-    // יצירת כוכבים
+    // יצירת כוכבים רקע
     const starField = document.getElementById('starField');
     for (let i = 0; i < 150; i++) {
         const star = document.createElement('div');
         star.className = 'star';
         star.style.left = Math.random() * 100 + '%';
         star.style.top = Math.random() * 100 + '%';
-        const size = Math.random() * 3 + 'px';
-        star.style.width = size;
-        star.style.height = size;
+        star.style.width = star.style.height = Math.random() * 3 + 'px';
         star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
         starField.appendChild(star);
     }
 
-    function generateHoroscope() {
+    const terms = [
+        "נסיגת מרקורי בבית ה-4", "זווית הרמונית בין ונוס למאדים", "מעבר של הירח למזל מים", 
+        "קונז'נקשן של אורנוס ופלוטו", "היבט חיובי מיופיטר", "שמש בבית הקריירה", 
+        "סטורן בנסיגה קוסמית", "טרנזיט של נפטון בבית הבית", "זווית של 120 מעלות מהשמש"
+    ];
+
+    const predictions = [
+        "מזכיר לכם שהיום הכל קטן עליכם.", "מביא איתו הזדמנות לשבת רגע ולנשום.", 
+        "מראה שצפויה לכם הפתעה טובה בקרוב.", "מרמז שהגיע הזמן להתפנק במשהו טעים.", 
+        "יוצר זרימה של אנרגיות חיוביות בבית.", "מסדר לכם יום שקט ונטול דאגות.", 
+        "מבטיח שהכל מסתדר על הצד הטוב ביותר.", "מכוון אתכם לזמן איכות משפחתי."
+    ];
+
+    const mottos = [
+        "מיט א רוהיגקייט", "בנחת אמיתית", "אן לחץ בכלל", "בשמחה רבה", 
+        "ברוגע מוחלט", "בלי עצבים", "שלווה קוסמית", "פשוט לנשום", 
+        "הכל מלמעלה", "בשקט ובשלווה", "בלי דאגות", "אן לחץ!", 
+        "רוגע נפשי", "מיט א גאנצע שמחה", "בלי למהר", "חיוך פנימי"
+    ];
+
+    function spinStars() {
         const user = document.getElementById('user-select').value;
         const box = document.getElementById('result-box');
-        const analysisDiv = document.getElementById('analysis');
-        const predDiv = document.getElementById('prediction');
-
-        const phrases = [
-            "בשמחה גדולה", "בנחת אמיתית", "מיט א רוהיגקייט", "אן לחץ בכלל", "ברוגע מוחלט",
-            "בלי עצבים", "שלווה קוסמית", "נשימות עמוקות", "הכל מלמעלה בנחת",
-            "שקט תעשייתי", "בלי דאגות מיותרות", "נחת רוח", "על מי מנוחות",
-            "חיוך פנימי", "בלי רעשי רקע", "רוגע נפשי עמוק", "מיט א גאנצע שמחה",
-            "הכל יסתדר - אן לחץ", "ליהנות מהרגע", "שלום בית ושלווה",
-            "בלי למהר לשום מקום", "שמחה בלב ובנשמה", "בנחת ובסבלנות",
-            "אן לחץ, הכל רגוע", "מיט א שמחה'דיגע פנים", "פשוט להיות בנחת",
-            "בלי מחשבות מיותרות", "רוגע פנימי", "שלוות עולמים", "בלי טיפה של מתח"
-        ];
-
-        let randomP = () => phrases[Math.floor(Math.random() * phrases.length)];
         
-        if (user === 'dad') {
-            analysisDiv.innerText = "♒ מזל דלי (אוויר): נשלט ע\"י אורנוס. חשיבה עצמאית ומקוריות.";
-            predDiv.innerText = "אבא, הכוכבים מראים שסידור המזלות היום דורש ממך לעשות הכל " + randomP() + ".";
-        } else if (user === 'mom') {
-            analysisDiv.innerText = "♏ מזל עקרב (מים): נשלט ע\"י פלוטו. עוצמה רגשית ואינטואיציה.";
-            predDiv.innerText = "אמא, האנרגיה הקוסמית מכוונת אותך לפעול היום אך ורק " + randomP() + ".";
-        } else if (user === 'both') {
-            analysisDiv.innerText = "♒ דלי + ♏ עקרב: שילוב של אוויר ומים. חיבור מרתק בין שכל לרגש.";
-            predDiv.innerText = "אבא ואמא, המפה המשותפת שלכם מראה שזה יום מושלם לזמן איכות. הכוכבים ממליצים לכם לנהל את היום יחד " + randomP() + " ובעיקר " + randomP() + ".";
-        }
+        // הגרלה רנדומלית בכל לחיצה
+        const term = terms[Math.floor(Math.random() * terms.length)];
+        const pred = predictions[Math.floor(Math.random() * predictions.length)];
+        const motto = mottos[Math.floor(Math.random() * mottos.length)];
 
-        if (user) box.style.display = 'block';
+        let prefix = "";
+        if (user === 'dad') prefix = "אבא, ";
+        else if (user === 'mom') prefix = "אמא, ";
+        else prefix = "אבא ואמא, ";
+
+        document.getElementById('astro-term').innerText = "🔭 " + term;
+        document.getElementById('main-text').innerText = prefix + term + " " + pred;
+        document.getElementById('motto-tag').innerText = "💡 " + motto;
+
+        // אפקט רענון - מכבה ומדליק את הקופסה
+        box.style.display = 'none';
+        setTimeout(() => { box.style.display = 'block'; }, 10);
     }
 </script>
 </body>
