@@ -29,7 +29,6 @@
             direction: rtl;
         }
 
-        /* אפקט כוכבים עדין */
         body::before {
             content: "";
             position: fixed;
@@ -46,133 +45,141 @@
         .container {
             background-color: var(--card);
             padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(212, 168, 67, 0.2);
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 20px rgba(212, 168, 67, 0.15);
             text-align: center;
             border: 1px solid rgba(212, 168, 67, 0.3);
             width: 90%;
-            max-width: 500px;
+            max-width: 450px;
         }
 
         h1 {
             color: var(--gold);
             font-size: 2.2rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.5rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .subtitle {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--silver);
             margin-bottom: 2rem;
             display: block;
+            letter-spacing: 1px;
         }
 
         select {
             background-color: #1a1a4a;
             color: var(--text);
             border: 2px solid var(--gold);
-            padding: 12px 20px;
+            padding: 15px;
             font-size: 1.1rem;
-            border-radius: 10px;
-            appearance: none;
+            border-radius: 12px;
             width: 100%;
             cursor: pointer;
             outline: none;
             font-family: 'Noto Serif Hebrew', serif;
-            margin-bottom: 25px;
             box-sizing: border-box;
+            margin-bottom: 25px;
         }
 
         button {
             background: linear-gradient(135deg, var(--gold), #b58930);
             color: var(--night);
             border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border-radius: 10px;
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             font-family: 'Noto Serif Hebrew', serif;
+            width: 100%;
         }
 
         button:hover {
             background: linear-gradient(135deg, var(--gold-light), var(--gold));
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(212, 168, 67, 0.4);
-        }
-
-        #result {
-            margin-top: 35px;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: var(--silver);
-            min-height: 60px;
         }
 
         #result-text {
-            background: rgba(255, 255, 255, 0.05);
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.03);
             padding: 20px;
-            border-radius: 10px;
-            border-right: 4px solid var(--gold); /* העברתי לימין לעברית */
+            border-radius: 15px;
+            border-right: 4px solid var(--gold);
             display: none;
             text-align: right;
+            line-height: 1.6;
+            font-size: 1.2rem;
+            color: var(--gold-light);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>הורוסקופ ✨<br><span class="subtitle">של אבא ואמא</span></h1>
+    <h1>הורוסקופ ✨</h1>
+    <span class="subtitle">של אבא ואמא</span>
     
-    <select id="zodiac">
-        <option value="" disabled selected>בחרו מזל...</option>
-        <option value="טלה">Aries (טלה)</option>
-        <option value="שור">Taurus (שור)</option>
-        <option value="תאומים">Gemini (תאומים)</option>
-        <option value="סרטן">Cancer (סרטן)</option>
-        <option value="אריה">Leo (אריה)</option>
-        <option value="בתולה">Virgo (בתולה)</option>
-        <option value="מאזניים">Libra (מאזניים)</option>
-        <option value="עקרב">Scorpio (עקרב)</option>
-        <option value="קשת">Sagittarius (קשת)</option>
-        <option value="גדי">Capricorn (גדי)</option>
-        <option value="דלי">Aquarius (דלי)</option>
-        <option value="דגים">Pisces (דגים)</option>
+    <select id="user-select">
+        <option value="" disabled selected>מי בודק היום?</option>
+        <option value="dad">אבא (דלי ♒)</option>
+        <option value="mom">אמא (עקרב ♏)</option>
     </select>
 
-    <button onclick="getHoroscope()">קבלת תחזית</button>
+    <button onclick="showPrediction()">גלו מה צפוי לכם</button>
     
-    <div id="result">
-        <div id="result-text"></div>
-    </div>
+    <div id="result-text"></div>
 </div>
 
 <script>
-    function getHoroscope() {
-        const predictions = [
-            "היום צפוי לכם יום מלא באנרגיות חיוביות. זמן מצוין להתחלות חדשות ולבילוי משפחתי.",
-            "הכוכבים ממליצים לקחת פסק זמן קטן ולנוח. השקיעו בעצמכם וברוגע שלכם.",
-            "האינטואיציה שלכם חדה היום מתמיד. סמכו עליה בהחלטות הקטנות והגדולות.",
-            "האהבה נמצאת באוויר! זמן נהדר לחיזוק קשרים ולשיחות עומק עם מי שקרוב אליכם.",
-            "מישהו קרוב חושב עליכם ויפתיע אתכם לטובה בהמשך היום. תהיו מוכנים."
+    function showPrediction() {
+        const user = document.getElementById('user-select').value;
+        const resultDiv = document.getElementById('result-text');
+        
+        const commonPhrases = [
+            "היום הכל ילך בשמחה ובלב פתוח.",
+            "תעשו הכל בנחת, העולם לא בורח.",
+            "היום המוטו שלכם הוא: מיט א רוהיגקייט.",
+            "הכוכבים אומרים: אן לחץ! הכל יסתדר על הצד הטוב ביותר."
         ];
         
-        const random = predictions[Math.floor(Math.random() * predictions.length)];
-        const sign = document.getElementById('zodiac').value;
-        const resultContainer = document.getElementById('result-text');
+        const dadTips = [
+            "אבא, היום זה זמן מצוין לקחת רגע לעצמך ולנוח.",
+            "דלי יקר, היום האנרגיה שלך בשיאה. תיהנה מהיום בנחת.",
+            "אבא, צפויה לך הפתעה נעימה היום. מיט א רוהיגקייט!",
+            ...commonPhrases
+        ];
         
-        if (!sign) {
-            resultContainer.innerText = "אנא בחרו מזל כדי לקבל תחזית.";
-            resultContainer.style.borderRightColor = "#ff6b6b"; /* אדום לשגיאה */
+        const momTips = [
+            "אמא, היום הכל יסתדר בשמחה ובקלות.",
+            "היום הכוכבים מחייכים אלייך. קחי הכל אן לחץ.",
+            "אמא, הסבלנות שלך תשתלם היום בענק. בנחת!",
+            ...commonPhrases
+        ];
+
+        let message = "";
+        if (user === "dad") {
+            message = dadTips[Math.floor(Math.random() * dadTips.length)];
+        } else if (user === "mom") {
+            message = momTips[Math.floor(Math.random() * momTips.length)];
+        }
+
+        if (!user) {
+            resultDiv.innerText = "קודם תבחרו אם זה אבא או אמא...";
         } else {
-            resultContainer.innerText = "תחזית למזל " + sign + ": " + random;
-            resultContainer.style.borderRightColor = "var(--gold)";
+            resultDiv.innerText = message;
         }
         
-        resultContainer.style.display = 'block';
+        resultDiv.style.display = 'block';
     }
 </script>
 
