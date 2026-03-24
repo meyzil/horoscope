@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הורוסקופ של אבא ואמא ✨</title>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;700;900&family=Noto+Serif+Hebrew:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #0a0a1a;
+    --deep: #10102a;
+    --card: #16163a;
+    --gold: #d4a843;
+    --gold-light: #f0cc7a;
+    --silver: #c8d0e0;
+    --glow-aqua: #4fc3d0;
+    --glow-purple: #8b5cf6;
+    --glow-rose: #e879a0;
+    --text: #eef0f8;
+    --text-muted: #8890aa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Serif Hebrew', serif;
+    background: var(--night);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Star field */
+  .stars {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--dur) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.1; transform: scale(0.8); }
+    to   { opacity: 0.9; transform: scale(1.2); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 30px 20px 60px;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeDown 0.8s ease both;
+  }
+  .header .moon-icon {
+    font-size: 52px;
+    display: block;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 18px var(--gold));
+    animation: float 4s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
+  .header h1 {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--glow-rose));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Date display */
+  .date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(212,168,67,0.12);
+    border: 1px solid rgba(212,168,67,0.3);
+    border-radius: 40px;
+    padding: 6px 18px;
+    font-size: 13px;
+    color: var(--gold-light);
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0;
+    background: var(--deep);
+    border-radius: 16px;
+    padding: 4px;
+    margin-bottom: 32px;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 14px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, #1e1e50, #2a1a4a);
+    color: var(--gold-light);
+    box-shadow: 0 4px 20px rgba(139,92,246,0.3);
+  }
+
+  /* Person cards */
+  .person-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 480px) {
+    .person-grid { grid-template-columns: 1fr; }
+  }
+
+  .person-card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 22px 18px;
+    border: 1px solid rgba(255,255,255,0.07);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .person-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 20px;
+  }
+  .person-card.dad::before  { background: radial-gradient(circle at 30% 30%, rgba(79,195,208,0.15), transparent 70%); }
+  .person-card.mom::before  { background: radial-gradient(circle at 70% 30%, rgba(232,121,160,0.15), transparent 70%); }
+  .person-card:hover::before, .person-card.selected::before { opacity: 1; }
+  .person-card.selected {
+    border-color: rgba(212,168,67,0.5);
+    box-shadow: 0 0 24px rgba(212,168,67,0.15);
+    transform: translateY(-2px);
+  }
+
+  .person-label {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .person-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .person-card.dad .person-name { color: var(--glow-aqua); }
+  .person-card.mom .person-name { color: var(--glow-rose); }
+  .person-sign {
+    font-size: 28px;
+    margin-bottom: 4px;
+  }
+  .person-sign-name {
+    font-size: 15px;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+  .selected-check {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 22px;
+    height: 22px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .person-card.selected .selected-check { opacity: 1; }
+
+  /* Generate button */
+  .generate-btn {
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(135deg, #2a1a6a, #1a1a4a);
+    border: 1px solid rgba(212,168,67,0.4);
+    border-radius: 16px;
+    color: var(--gold-light);
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 24px rgba(139,92,246,0.2);
+  }
+  .generate-btn:hover {
+    background: linear-gradient(135deg, #3a2a80, #2a2a60);
+    box-shadow: 0 6px 32px rgba(139,92,246,0.4);
+    transform: translateY(-2px);
+  }
+  .generate-btn:active { transform: translateY(0); }
+  .generate-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Result card */
+  .result-card {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 28px 24px;
+    border: 1px solid rgba(212,168,67,0.2);
+    margin-bottom: 20px;
+    animation: fadeUp 0.6s ease both;
+    display: none;
+  }
+  .result-card.show { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .result-emoji { font-size: 36px; }
+  .result-title-wrap {}
+  .result-person {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .result-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--gold-light);
+  }
+
+  .horoscope-text {
+    font-size: 18px;
+    line-height: 1.85;
+    color: var(--silver);
+    white-space: pre-line;
+  }
+
+  /* Sections inside horoscope */
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(212,168,67,0.1);
+    border: 1px solid rgba(212,168,67,0.25);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 13px;
+    color: var(--gold);
+    margin: 14px 0 6px;
+  }
+
+  /* Loading */
+  .loading {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+  }
+  .loading.show { display: block; }
+  .loading-stars {
+    font-size: 32px;
+    display: block;
+    animation: spin 3s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  /* WhatsApp button */
+  .whatsapp-btn {
+    width: 100%;
+    padding: 17px;
+    background: linear-gradient(135deg, #128c7e, #075e54);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 20px rgba(18,140,126,0.3);
+  }
+  .whatsapp-btn:hover {
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    box-shadow: 0 6px 28px rgba(37,211,102,0.4);
+    transform: translateY(-2px);
+  }
+
+  .copy-btn {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    color: var(--text-muted);
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .copy-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text);
+  }
+
+  .actions { display: none; }
+  .actions.show { display: block; }
+
+  /* Error */
+  .error-msg {
+    background: rgba(232,121,160,0.1);
+    border: 1px solid rgba(232,121,160,0.3);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--glow-rose);
+    font-size: 15px;
+    display: none;
+    margin-bottom: 16px;
+  }
+  .error-msg.show { display: block; }
+
+  .tip {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 12px;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="moon-icon">🌙</span>
+    <h1>הורוסקופ של אבא ואמא</h1>
+    <p>✨ הורוסקופ אישי יומי ושבועי ✨</p>
+  </div>
+
+  <div style="text-align:center; margin-bottom:28px;">
+    <div class="date-badge">📅 <span id="todayDate"></span></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="setTab('daily')" id="tab-daily">יומי 🌞</button>
+    <button class="tab-btn" onclick="setTab('weekly')" id="tab-weekly">שבועי 🌕</button>
+  </div>
+
+  <!-- Person selection -->
+  <div class="person-grid">
+    <div class="person-card dad selected" id="card-dad" onclick="togglePerson('dad')">
+      <div class="selected-check">✓</div>
+      <div class="person-label">אבא</div>
+      <div class="person-name">דלי</div>
+      <div class="person-sign">🏺</div>
+      <div class="person-sign-name">Aquarius</div>
+    </div>
+    <div class="person-card mom selected" id="card-mom" onclick="togglePerson('mom')">
+      <div class="selected-check">✓</div>
+      <div class="person-label">אמא</div>
+      <div class="person-name">עקרב</div>
+      <div class="person-sign">🦂</div>
+      <div class="person-sign-name">Scorpio</div>
+    </div>
+  </div>
+
+  <!-- Generate -->
+  <button class="generate-btn" id="genBtn" onclick="generateHoroscope()">
+    ✨ צור הורוסקופ ✨
+  </button>
+
+  <div class="error-msg" id="errorMsg">⚠️ אירעה שגיאה. אנא נסה שוב.</div>
+
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <span class="loading-stars">⭐</span>
+    <div>הכוכבים מדברים...</div>
+  </div>
+
+  <!-- Results -->
+  <div id="results"></div>
+
+  <!-- Actions -->
+  <div class="actions" id="actions">
+    <button class="whatsapp-btn" onclick="sendWhatsApp()">
+      📲 שלח לוואטסאפ
+    </button>
+    <button class="copy-btn" onclick="copyText()">
+      📋 העתק טקסט
+    </button>
+  </div>
+
+  <div class="tip" id="tip"></div>
+
+</div>
+
+<script>
+// ── Stars ─────────────────────────────────────────
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  s.style.cssText = `
+    width:${size}px; height:${size}px;
+    top:${Math.random()*100}%;
+    left:${Math.random()*100}%;
+    --dur:${2+Math.random()*4}s;
+    animation-delay:${Math.random()*4}s;
+  `;
+  starsEl.appendChild(s);
+}
+
+// ── State ─────────────────────────────────────────
+let currentTab = 'daily';
+let selected = { dad: true, mom: true };
+let lastGeneratedText = '';
+
+// ── Date ─────────────────────────────────────────
+const now = new Date();
+const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+document.getElementById('todayDate').textContent =
+  `יום ${days[now.getDay()]}, ${now.getDate()} ב${months[now.getMonth()]} ${now.getFullYear()}`;
+
+// ── Tabs ─────────────────────────────────────────
+function setTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-daily').classList.toggle('active', tab === 'daily');
+  document.getElementById('tab-weekly').classList.toggle('active', tab === 'weekly');
+}
+
+// ── Person toggle ─────────────────────────────────
+function togglePerson(p) {
+  const other = p === 'dad' ? 'mom' : 'dad';
+  if (selected[p] && !selected[other]) return; // keep at least one
+  selected[p] = !selected[p];
+  document.getElementById(`card-${p}`).classList.toggle('selected', selected[p]);
+}
+
+// ── Generate ─────────────────────────────────────
+async function generateHoroscope() {
+  const btn = document.getElementById('genBtn');
+  const loading = document.getElementById('loading');
+  const results = document.getElementById('results');
+  const actions = document.getElementById('actions');
+  const errorMsg = document.getElementById('errorMsg');
+  const tip = document.getElementById('tip');
+
+  errorMsg.classList.remove('show');
+  results.innerHTML = '';
+  actions.classList.remove('show');
+  tip.textContent = '';
+  lastGeneratedText = '';
+
+  btn.disabled = true;
+  loading.classList.add('show');
+
+  const people = [];
+  if (selected.dad) people.push({ name: 'אבא', sign: 'דלי', emoji: '🏺', class: 'dad' });
+  if (selected.mom) people.push({ name: 'אמא', sign: 'עקרב', emoji: '🦂', class: 'mom' });
+
+  const period = currentTab === 'daily' ? 'יומי' : 'שבועי';
+  const periodHebrew = currentTab === 'daily'
+    ? `היום, ${now.getDate()} ב${months[now.getMonth()]} ${now.getFullYear()}`
+    : `השבוע (שבוע ${getWeekNumber(now)} של ${now.getFullYear()})`;
+
+  const signsStr = people.map(p => `${p.name} (מזל ${p.sign})`).join(' ו');
+  const prompt = `אתה אסטרולוג מקצועי וחם. כתוב הורוסקופ ${period} בעברית עבור ${signsStr}.
+התאריך הוא: ${periodHebrew}.
+
+הנחיות:
+- כתוב בשפה חמה, אוהבת, מעודדת ומלאת תקווה
+- התאמן לגיל מבוגר (בני 70) — שפה פשוטה, ברורה, גדולה ברוח
+- לכל מזל כתוב ${currentTab === 'daily' ? '4-5' : '6-7'} משפטים
+- לכל מזל כלול: תחזית כללית, אהבה/משפחה, בריאות, ומספר מזל יומי/שבועי
+- הפרד בין המזלות בצורה ברורה
+- התחל כל מזל עם שורה: "✨ מזל [שם] ${currentTab === 'daily' ? 'היום' : 'השבוע'} ✨"
+- אחרי כל תחזית הוסף שורה: "💛 מספר מזל: [מספר]"
+- כתוב בצורה שמשמחת ומחזקת
+
+כתוב רק את הטקסט, ללא הקדמות נוספות.`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content.map(b => b.text || '').join('');
+
+    loading.classList.remove('show');
+    btn.disabled = false;
+
+    if (!text) throw new Error('empty');
+
+    lastGeneratedText = buildWhatsAppText(people, text, period, periodHebrew);
+
+    // Render
+    const card = document.createElement('div');
+    card.className = 'result-card show';
+    card.innerHTML = `
+      <div class="result-header">
+        <div class="result-emoji">${people.length === 2 ? '🌙✨' : people[0].emoji}</div>
+        <div class="result-title-wrap">
+          <div class="result-person">${people.map(p=>p.name).join(' ו')} • ${period}</div>
+          <div class="result-title">${periodHebrew}</div>
+        </div>
+      </div>
+      <div class="horoscope-text">${formatText(text)}</div>
+    `;
+    results.appendChild(card);
+    actions.classList.add('show');
+    tip.textContent = '💡 לחץ על וואטסאפ כדי לשלוח ישירות לאבא ואמא';
+
+  } catch(e) {
+    loading.classList.remove('show');
+    btn.disabled = false;
+    errorMsg.classList.add('show');
+    console.error(e);
+  }
+}
+
+function formatText(text) {
+  return text
+    .replace(/✨[^✨\n]+✨/g, m => `<div class="section-tag">${m}</div>`)
+    .replace(/\n/g, '<br>');
+}
+
+function buildWhatsAppText(people, text, period, date) {
+  return `🌙 הורוסקופ ${period} ✨\n${date}\n\n${text}\n\n💫 נשלח עם אהבה`;
+}
+
+function getWeekNumber(d) {
+  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = date.getUTCDay() || 7;
+  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
+  return Math.ceil((((date - yearStart) / 86400000) + 1)/7);
+}
+
+// ── Share ─────────────────────────────────────────
+function sendWhatsApp() {
+  if (!lastGeneratedText) return;
+  const encoded = encodeURIComponent(lastGeneratedText);
+  window.open(`https://wa.me/?text=${encoded}`, '_blank');
+}
+
+async function copyText() {
+  if (!lastGeneratedText) return;
+  try {
+    await navigator.clipboard.writeText(lastGeneratedText);
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✅ הועתק!';
+    setTimeout(() => btn.innerHTML = '📋 העתק טקסט', 2000);
+  } catch(e) {
+    alert(lastGeneratedText);
+  }
+}
+</script>
+</body>
+</html>
